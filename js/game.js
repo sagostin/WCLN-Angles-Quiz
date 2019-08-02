@@ -12,7 +12,7 @@ let stage = new createjs.Stage("gameCanvas"); // canvas id is gameCanvas
 
 let score = 0;
 
-let questionCount = 0;
+let questionNumber = 0;
 
 //question storage and such
 let json = {
@@ -150,7 +150,27 @@ function initGraphics() {
     });
     stage.addChild(checkButton);
 
+    loadQuestion(0);
+
     gameStarted = true;
+}
+
+function loadQuestion(number) {
+    let count = json.questions.length;
+
+    if (!(number >= count)) {
+        for (i in json.questions) {
+            stage.removeChild(questionImg[i]);
+        }
+
+        questionImg[number].x = STAGE_WIDTH / 2 - (questionImg[number].image.width / 2);
+        questionImg[number].y = 335;
+        stage.addChild(questionImg[number]);
+
+        questionNumber = number;
+    } else {
+        console.error("number out of bounds");
+    }
 }
 
 /**
