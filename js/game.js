@@ -28,10 +28,18 @@ let json = {
 let fakeAnswersAngles = ["test 1", "test 2"];
 let fakeAnswersRational = ["test 1 - 2", "test 2 - 2"];
 
+//text
+let angleText;
+let rationalText;
+
+let answerBox = new createjs.Shape();
+let rationalBox = new createjs.Shape();
+
 // bitmap letiables
 let background;
 let checkButton;
 let questionImg = [];
+let nextButton = [];
 
 var imageContainer = new createjs.Shape();
 
@@ -71,6 +79,10 @@ function setupManifest() {
         {
             src: "img/check-button.png",
             id: "check-button"
+        },
+        {
+            src: "img/next.png",
+            id: "nextbutton"
         }
     ];
 
@@ -109,6 +121,10 @@ function handleFileLoad(event) {
     if (event.item.id == "check-button") {
         checkButton = new createjs.Bitmap(event.result);
     }
+    if (event.item.id == "nextbutton") {
+        nextButton.push(new createjs.Bitmap(event.result));
+        nextButton.push(new createjs.Bitmap(event.result));
+    }
     if (event.item.id.startsWith("question")) {
         questionImg.push(new createjs.Bitmap(event.result));
     }
@@ -137,7 +153,6 @@ function loadComplete(event) {
  *
  */
 function initGraphics() {
-
     imageContainer.graphics.beginStroke("#5771b7");
     imageContainer.graphics.beginFill("#ffffff");
     imageContainer.graphics.drawRect(40, 300, STAGE_WIDTH - 80, 240);
@@ -151,9 +166,66 @@ function initGraphics() {
     stage.addChild(checkButton);
 
     loadQuestion(0);
+    loadTextAndBoxes();
 
     gameStarted = true;
 }
+
+/**
+ *  Load the text and boxes
+ */
+
+function loadTextAndBoxes() {
+    //angle box
+    answerBox.graphics.beginStroke("black");
+    answerBox.graphics.drawRect(60, 60, STAGE_WIDTH - 120, 45);
+    stage.addChild(answerBox);
+
+    nextButton[0].x = STAGE_WIDTH / 2 + 100;
+    nextButton[0].y = 68;
+    stage.addChild(nextButton[0]);
+    nextButton[0].on("click", function (event) {
+        changeAngleText(event);
+    });
+
+    //rational box
+    rationalBox.graphics.beginStroke("black");
+    rationalBox.graphics.drawRect(60, 120, STAGE_WIDTH - 120, 45);
+    stage.addChild(rationalBox);
+    nextButton[1].x = STAGE_WIDTH / 2 + 100;
+    nextButton[1].y = 128;
+
+    nextButton[1].on("click", function (event) {
+        changeRationalText(event);
+    });
+    stage.addChild(nextButton[1]);
+
+    //angle text
+    angleText = new createjs.Text("Select Angle X", "24px Comic Sans MS", "#FFFFFF");
+    angleText.textBaseline = "alphabetic";
+    angleText.x = 65;
+    angleText.y = 90;
+    stage.addChild(angleText);
+
+    //rational text
+    rationalText = new createjs.Text("Select Rational", "24px Comic Sans MS", "#FFFFFF");
+    rationalText.textBaseline = "alphabetic";
+    rationalText.x = 65;
+    rationalText.y = 150;
+    stage.addChild(rationalText);
+}
+
+function changeAngleText() {
+}
+
+function changeRationalText() {
+}
+
+/**
+ * Load the image for the question
+ *
+ * @param number
+ */
 
 function loadQuestion(number) {
     let count = json.questions.length;
