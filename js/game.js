@@ -216,9 +216,42 @@ function loadTextAndBoxes() {
 }
 
 function changeAngleText() {
+    console.log("change angle text");
 }
 
+//reset the random number for the correct answer
+let rationalTextNum = getRandomInt(fakeAnswersRational.length + json.questions.length);
+
+let rationalClickCount = 0;
+let fakeRationalNum = 0;
 function changeRationalText() {
+    stage.removeChild(rationalText);
+    if (rationalClickCount > (fakeAnswersRational.length + json.questions.length - 1)) {
+        rationalClickCount = 0;
+    }
+    if (fakeRationalNum > (fakeAnswersRational.length - 1)) {
+        fakeRationalNum = 0;
+    }
+    if (rationalClickCount == rationalTextNum) {
+        rationalText = new createjs.Text(json.questions[questionNumber].rational, "24px Comic Sans MS", "#FFFFFF");
+        rationalText.textBaseline = "alphabetic";
+        rationalText.x = 65;
+        rationalText.y = 150;
+    } else {
+        rationalText = new createjs.Text(fakeAnswersRational[fakeRationalNum], "24px Comic Sans MS", "#FFFFFF");
+        rationalText.textBaseline = "alphabetic";
+        rationalText.x = 65;
+        rationalText.y = 150;
+    }
+
+    fakeRationalNum++;
+    rationalClickCount++;
+
+    stage.addChild(rationalText);
+}
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
 }
 
 /**
@@ -263,6 +296,10 @@ function update(event) {
 function checkButtonClick(event) {
     //event.target.x = event.stageX;
     //event.target.y = event.stageY;
+
+    if ((rationalClickCount - 1) == rationalTextNum) {
+        console.log("correct!");
+    }
 
     console.log("todo add button check");
     //TODO check if selected types are valid and such
