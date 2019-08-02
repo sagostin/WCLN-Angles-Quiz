@@ -12,9 +12,26 @@ let stage = new createjs.Stage("gameCanvas"); // canvas id is gameCanvas
 
 let score = 0;
 
+let questionCount = 0;
+
+//question storage and such
+let json = {
+    "questions": [
+        {
+            "src": "img/questions/example1.png",
+            "angle": "55°",
+            "rational": "Lines are parallel",
+        }
+    ]
+};
+
+let fakeAnswersAngles = ["test 1", "test 2"];
+let fakeAnswersRational = ["test 1 - 2", "test 2 - 2"];
+
 // bitmap letiables
 let background;
-let angleImg = [];
+let checkButton;
+let questionImg = [];
 
 var imageContainer = new createjs.Shape();
 
@@ -50,11 +67,20 @@ function setupManifest() {
         {
             src: "img/bg.png",
             id: "background"
+        },
+        {
+            src: "img/check-button.png",
+            id: "check-button"
         }
     ];
 
     //TODO make this pull from the config json?
-    //manifest.push({src: "", id: ""});
+    let count = 0;
+    for (i in json.questions) {
+        manifest.push({src: json.questions[i].src, id: "question" + count});
+        count++;
+        console.log(json.questions[i].src);
+    }
 }
 
 function startPreload() {
@@ -80,6 +106,12 @@ function handleFileLoad(event) {
     if (event.item.id == "background") {
         background = new createjs.Bitmap(event.result);
     }
+    if (event.item.id == "check-button") {
+        checkButton = new createjs.Bitmap(event.result);
+    }
+    if (event.item.id.startsWith("question")) {
+        questionImg.push(new createjs.Bitmap(event.result));
+    }
 }
 
 function loadError(evt) {
@@ -101,7 +133,7 @@ function loadComplete(event) {
 }
 
 /**
- * Load the stuff
+ * Load the basic stuff
  *
  */
 function initGraphics() {
@@ -110,6 +142,13 @@ function initGraphics() {
     imageContainer.graphics.beginFill("#ffffff");
     imageContainer.graphics.drawRect(40, 300, STAGE_WIDTH - 80, 240);
     stage.addChild(imageContainer);
+
+    checkButton.x = STAGE_WIDTH / 2 - (checkButton.image.width / 2);
+    checkButton.y = 240;
+    checkButton.on("click", function (event) {
+        checkButtonClick(event);
+    });
+    stage.addChild(checkButton);
 
     gameStarted = true;
 }
@@ -122,4 +161,17 @@ function initGraphics() {
 
 function update(event) {
     stage.update(event);
+}
+
+/**
+ * Pylon click handler
+ *
+ * @param event
+ */
+function checkButtonClick(event) {
+    //event.target.x = event.stageX;
+    //event.target.y = event.stageY;
+
+    console.log("todo add button check");
+    //TODO check if selected types are valid and such
 }
