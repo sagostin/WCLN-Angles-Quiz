@@ -19,14 +19,14 @@ let json = {
     "questions": [
         {
             "src": "img/questions/example1.png",
-            "angle": "55°",
+            "angle": "55 degrees",
             "rational": "Lines are parallel",
         }
     ]
 };
 
-let fakeAnswersAngles = ["test 1", "test 2"];
-let fakeAnswersRational = ["test 1 - 2", "test 2 - 2"];
+let fakeAnswersAngles = ["test 1", "test 2", "oof"];
+let fakeAnswersRational = ["test 1 - 2", "test 2 - 2", "iosdjan"];
 
 //text
 let angleText;
@@ -215,13 +215,37 @@ function loadTextAndBoxes() {
     stage.addChild(rationalText);
 }
 
+let angleTextNum = getRandomInt(fakeAnswersAngles.length + json.questions.length);
+let angleClickCount = 0;
+let fakeAngleNum = 0;
 function changeAngleText() {
-    console.log("change angle text");
+    stage.removeChild(angleText);
+    if (angleClickCount > (fakeAnswersAngles.length + json.questions.length - 1)) {
+        angleClickCount = 0;
+    }
+    if (fakeAngleNum > (fakeAnswersAngles.length - 1)) {
+        fakeAngleNum = 0;
+    }
+    if (angleClickCount == angleTextNum) {
+        angleText = new createjs.Text(json.questions[questionNumber].angle, "24px Comic Sans MS", "#FFFFFF");
+        angleText.textBaseline = "alphabetic";
+        angleText.x = 65;
+        angleText.y = 90;
+    } else {
+        angleText = new createjs.Text(fakeAnswersAngles[fakeAngleNum], "24px Comic Sans MS", "#FFFFFF");
+        angleText.textBaseline = "alphabetic";
+        angleText.x = 65;
+        angleText.y = 90;
+    }
+
+    fakeAngleNum++;
+    angleClickCount++;
+
+    stage.addChild(angleText);
 }
 
 //reset the random number for the correct answer
 let rationalTextNum = getRandomInt(fakeAnswersRational.length + json.questions.length);
-
 let rationalClickCount = 0;
 let fakeRationalNum = 0;
 function changeRationalText() {
@@ -298,7 +322,10 @@ function checkButtonClick(event) {
     //event.target.y = event.stageY;
 
     if ((rationalClickCount - 1) == rationalTextNum) {
-        console.log("correct!");
+        console.log("correct! rational");
+    }
+    if ((angleClickCount - 1) == angleTextNum) {
+        console.log("correct! angle");
     }
 
     console.log("todo add button check");
