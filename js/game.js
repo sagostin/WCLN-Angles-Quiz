@@ -21,6 +21,16 @@ let json = {
             "src": "img/questions/example1.png",
             "angle": "55 degrees",
             "rational": "Lines are parallel",
+        },
+        {
+            "src": "img/questions/example1.png",
+            "angle": "66 degrees",
+            "rational": "Lines are parallel 2",
+        },
+        {
+            "src": "img/questions/example1.png",
+            "angle": "77 degrees",
+            "rational": "Lines are parallel 3",
         }
     ]
 };
@@ -175,6 +185,11 @@ function initGraphics() {
  *  Load the text and boxes
  */
 
+let possibleAngles = [];
+let possibleRationals = [];
+let angleTextNum = getRandomInt(json.questions.length);
+let rationalTextNum = getRandomInt(json.questions.length);
+
 function loadTextAndBoxes() {
     //angle box
     answerBox.graphics.beginStroke("black");
@@ -213,62 +228,60 @@ function loadTextAndBoxes() {
     rationalText.x = 65;
     rationalText.y = 150;
     stage.addChild(rationalText);
-}
 
-let angleTextNum = getRandomInt(fakeAnswersAngles.length + json.questions.length);
+    for (let i = 0; i < json.questions.length; i++) {
+        if (i == angleTextNum) {
+            possibleAngles.push(questionNumber);
+        } else {
+            if (i == questionNumber) {
+                possibleAngles.push(angleTextNum);
+            } else {
+                possibleAngles.push(i);
+            }
+        }
+
+        if (i == rationalTextNum) {
+            possibleRationals
+                .push(questionNumber);
+        } else {
+            if (i == questionNumber) {
+                possibleRationals.push(rationalTextNum);
+            } else {
+                possibleRationals.push(i);
+            }
+        }
+    }
+}
 let angleClickCount = 0;
-let fakeAngleNum = 0;
 function changeAngleText() {
     stage.removeChild(angleText);
-    if (angleClickCount > (fakeAnswersAngles.length + json.questions.length - 1)) {
+
+    if (angleClickCount >= json.questions.length) {
         angleClickCount = 0;
     }
-    if (fakeAngleNum > (fakeAnswersAngles.length - 1)) {
-        fakeAngleNum = 0;
-    }
-    if (angleClickCount == angleTextNum) {
-        angleText = new createjs.Text(json.questions[questionNumber].angle, "24px Comic Sans MS", "#FFFFFF");
+    angleText = new createjs.Text(json.questions[possibleAngles[angleClickCount]].angle, "24px Comic Sans MS", "#FFFFFF");
         angleText.textBaseline = "alphabetic";
         angleText.x = 65;
         angleText.y = 90;
-    } else {
-        angleText = new createjs.Text(fakeAnswersAngles[fakeAngleNum], "24px Comic Sans MS", "#FFFFFF");
-        angleText.textBaseline = "alphabetic";
-        angleText.x = 65;
-        angleText.y = 90;
-    }
 
-    fakeAngleNum++;
     angleClickCount++;
 
     stage.addChild(angleText);
 }
 
 //reset the random number for the correct answer
-let rationalTextNum = getRandomInt(fakeAnswersRational.length + json.questions.length);
 let rationalClickCount = 0;
-let fakeRationalNum = 0;
 function changeRationalText() {
     stage.removeChild(rationalText);
-    if (rationalClickCount > (fakeAnswersRational.length + json.questions.length - 1)) {
+
+    if (rationalClickCount >= json.questions.length) {
         rationalClickCount = 0;
     }
-    if (fakeRationalNum > (fakeAnswersRational.length - 1)) {
-        fakeRationalNum = 0;
-    }
-    if (rationalClickCount == rationalTextNum) {
-        rationalText = new createjs.Text(json.questions[questionNumber].rational, "24px Comic Sans MS", "#FFFFFF");
-        rationalText.textBaseline = "alphabetic";
-        rationalText.x = 65;
-        rationalText.y = 150;
-    } else {
-        rationalText = new createjs.Text(fakeAnswersRational[fakeRationalNum], "24px Comic Sans MS", "#FFFFFF");
-        rationalText.textBaseline = "alphabetic";
-        rationalText.x = 65;
-        rationalText.y = 150;
-    }
+    rationalText = new createjs.Text(json.questions[possibleRationals[rationalClickCount]].rational, "24px Comic Sans MS", "#FFFFFF");
+    rationalText.textBaseline = "alphabetic";
+    rationalText.x = 65;
+    rationalText.y = 150;
 
-    fakeRationalNum++;
     rationalClickCount++;
 
     stage.addChild(rationalText);
@@ -321,13 +334,9 @@ function checkButtonClick(event) {
     //event.target.x = event.stageX;
     //event.target.y = event.stageY;
 
-    if ((rationalClickCount - 1) == rationalTextNum) {
-        console.log("correct! rational");
+    if (((rationalClickCount - 1) == rationalTextNum) && ((angleClickCount - 1) == angleTextNum)) {
+        console.log("correct!");
     }
-    if ((angleClickCount - 1) == angleTextNum) {
-        console.log("correct! angle");
-    }
-
-    console.log("todo add button check");
-    //TODO check if selected types are valid and such
+    //TODO reset values and display success text and move to next question
+    //TODO reset click count and angle num and regenerate the random number for the correct answers to be
 }
