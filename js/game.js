@@ -23,12 +23,12 @@ let json = {
             "rational": "Lines are parallel",
         },
         {
-            "src": "img/questions/example1.png",
+            "src": "img/questions/example2.png",
             "angle": "66 degrees",
             "rational": "Lines are parallel 2",
         },
         {
-            "src": "img/questions/example1.png",
+            "src": "img/questions/example3.png",
             "angle": "77 degrees",
             "rational": "Lines are parallel 3",
         }
@@ -96,7 +96,6 @@ function setupManifest() {
         }
     ];
 
-    //TODO make this pull from the config json?
     let count = 0;
     for (i in json.questions) {
         manifest.push({src: json.questions[i].src, id: "question" + count});
@@ -301,10 +300,6 @@ function loadQuestion(number) {
     let count = json.questions.length;
 
     if (!(number >= count)) {
-        for (i in json.questions) {
-            stage.removeChild(questionImg[i]);
-        }
-
         questionImg[number].x = STAGE_WIDTH / 2 - (questionImg[number].image.width / 2);
         questionImg[number].y = 335;
         stage.addChild(questionImg[number]);
@@ -325,6 +320,35 @@ function update(event) {
     stage.update(event);
 }
 
+function resetChecks() {
+    rationalClickCount = 0;
+    angleClickCount = 0;
+    possibleRationals = [];
+    possibleAngles = [];
+
+    rationalTextNum = getRandomInt(json.questions.length);
+    angleTextNum = getRandomInt(json.questions.length);
+
+    stage.removeChild(rationalText);
+    stage.removeChild(answerBox);
+    stage.removeChild(nextButton[0]);
+    stage.removeChild(rationalBox);
+    stage.removeChild(nextButton[1]);
+    stage.removeChild(angleText);
+
+    stage.removeChild(questionImg[questionNumber]);
+
+    nextQuestion = questionNumber;
+    if (nextQuestion < json.questions.length) {
+        nextQuestion = questionNumber + 1;
+    } else {
+        //TODO win message
+    }
+
+    loadQuestion(nextQuestion);
+    loadTextAndBoxes();
+}
+
 /**
  * Pylon click handler
  *
@@ -336,7 +360,7 @@ function checkButtonClick(event) {
 
     if (((rationalClickCount - 1) == rationalTextNum) && ((angleClickCount - 1) == angleTextNum)) {
         console.log("correct!");
+
+        resetChecks();
     }
-    //TODO reset values and display success text and move to next question
-    //TODO reset click count and angle num and regenerate the random number for the correct answers to be
 }
