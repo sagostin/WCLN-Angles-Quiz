@@ -35,12 +35,12 @@ let json = {
     ]
 };
 
-let fakeAnswersAngles = ["test 1", "test 2", "oof"];
-let fakeAnswersRational = ["test 1 - 2", "test 2 - 2", "iosdjan"];
-
 //text
 let angleText;
 let rationalText;
+let scoreText;
+let correctText;
+let incorrectText;
 
 let answerBox = new createjs.Shape();
 let rationalBox = new createjs.Shape();
@@ -48,6 +48,7 @@ let rationalBox = new createjs.Shape();
 // bitmap letiables
 let background;
 let checkButton;
+let winScreen;
 let questionImg = [];
 let nextButton = [];
 
@@ -93,6 +94,10 @@ function setupManifest() {
         {
             src: "img/next.png",
             id: "nextbutton"
+        },
+        {
+            src: "img/win-screen.png",
+            id: "winscreen"
         }
     ];
 
@@ -129,6 +134,9 @@ function handleFileLoad(event) {
     }
     if (event.item.id == "check-button") {
         checkButton = new createjs.Bitmap(event.result);
+    }
+    if (event.item.id == "winscreen") {
+        winScreen = new createjs.Bitmap(event.result);
     }
     if (event.item.id == "nextbutton") {
         nextButton.push(new createjs.Bitmap(event.result));
@@ -194,13 +202,8 @@ function loadTextAndBoxes() {
     answerBox.graphics.beginStroke("black");
     answerBox.graphics.drawRect(60, 60, STAGE_WIDTH - 120, 45);
     stage.addChild(answerBox);
-
     nextButton[0].x = STAGE_WIDTH / 2 + 100;
     nextButton[0].y = 68;
-    stage.addChild(nextButton[0]);
-    nextButton[0].on("click", function (event) {
-        changeAngleText(event);
-    });
 
     //rational box
     rationalBox.graphics.beginStroke("black");
@@ -209,25 +212,49 @@ function loadTextAndBoxes() {
     nextButton[1].x = STAGE_WIDTH / 2 + 100;
     nextButton[1].y = 128;
 
-    nextButton[1].on("click", function (event) {
-        changeRationalText(event);
-    });
-    stage.addChild(nextButton[1]);
-
     //angle text
     angleText = new createjs.Text("Select Angle X", "24px Comic Sans MS", "#FFFFFF");
     angleText.textBaseline = "alphabetic";
     angleText.x = 65;
     angleText.y = 90;
-    stage.addChild(angleText);
 
     //rational text
     rationalText = new createjs.Text("Select Rational", "24px Comic Sans MS", "#FFFFFF");
     rationalText.textBaseline = "alphabetic";
     rationalText.x = 65;
     rationalText.y = 150;
+
+    //correct text
+    correctText = new createjs.Text("Correct!", "24px Comic Sans MS", "#FFFFFF");
+    correctText.textBaseline = "alphabetic";
+    correctText.x = STAGE_WIDTH / 2 - correctText.getMeasuredWidth() / 2;
+    correctText.y = 200;
+
+    //incorrect text;
+    incorrectText = new createjs.Text("Incorrect!", "24px Comic Sans MS", "#FFFFFF");
+    incorrectText.textBaseline = "alphabetic";
+    incorrectText.x = STAGE_WIDTH / 2 - incorrectText.getMeasuredWidth() / 2;
+    incorrectText.y = 200;
+
+    if (!gameStarted) {
+        nextButton[0].on("click", function (event) {
+            changeAngleText(event);
+        });
+        nextButton[1].on("click", function (event) {
+            changeRationalText(event);
+        });
+
+        winScreen.on("click", function (event) {
+            winScreenClick(event);
+        });
+    }
+
+    stage.addChild(nextButton[0]);
+    stage.addChild(nextButton[1]);
+    stage.addChild(angleText);
     stage.addChild(rationalText);
 
+    //TODO fix this, it breaks when on the third question
     for (let i = 0; i < json.questions.length; i++) {
         if (i == angleTextNum) {
             possibleAngles.push(questionNumber);
@@ -258,6 +285,9 @@ function changeAngleText() {
     if (angleClickCount >= json.questions.length) {
         angleClickCount = 0;
     }
+
+    console.log(json.questions.length + " " + angleClickCount);
+
     angleText = new createjs.Text(json.questions[possibleAngles[angleClickCount]].angle, "24px Comic Sans MS", "#FFFFFF");
         angleText.textBaseline = "alphabetic";
         angleText.x = 65;
@@ -284,6 +314,15 @@ function changeRationalText() {
     rationalClickCount++;
 
     stage.addChild(rationalText);
+}
+
+//reset the random number for the correct answer
+function winScreenClick() {
+    stage.removeChild(winScreen);
+    stage.removeChild(scoreText);
+
+    loadQuestion(0);
+    loadTextAndBoxes();
 }
 
 function getRandomInt(max) {
@@ -338,15 +377,26 @@ function resetChecks() {
 
     stage.removeChild(questionImg[questionNumber]);
 
-    nextQuestion = questionNumber;
-    if (nextQuestion < json.questions.length) {
+    if (questionNumber < json.questions.length - 1) {
         nextQuestion = questionNumber + 1;
-    } else {
-        //TODO win message
-    }
 
-    loadQuestion(nextQuestion);
-    loadTextAndBoxes();
+        loadQuestion(nextQuestion);
+        loadTextAndBoxes();
+    } else {
+
+    }
+}
+
+function showWinScreen() {
+    stage.addChild(winScreen);
+
+    scoreText
+        = new createjs.Text(score, "24px Comic Sans MS", "#5771b7");
+    scoreText.textBaseline = "alphabetic";
+    scoreText.x = STAGE_WIDTH / 2 + 60;
+    scoreText.y = 248;
+
+    stage.addChild(scoreText);
 }
 
 /**
@@ -360,7 +410,32 @@ function checkButtonClick(event) {
 
     if (((rationalClickCount - 1) == rationalTextNum) && ((angleClickCount - 1) == angleTextNum)) {
         console.log("correct!");
+        score++;
+
+        stage.addChild(correctText);
+        createjs.Tween.get(correctText).to({alpha: 0}, 2000).call(removeCorrectText);
 
         resetChecks();
+    } else {
+        stage.addChild(incorrectText);
+        createjs.Tween.get(incorrectText).to({alpha: 0}, 2000).call(removeIncorrectText);
     }
+}
+
+function removeIncorrectText() {
+    stage.removeChild(incorrectText);
+    //incorrect text;
+    incorrectText = new createjs.Text("Incorrect!", "24px Comic Sans MS", "#FFFFFF");
+    incorrectText.textBaseline = "alphabetic";
+    incorrectText.x = STAGE_WIDTH / 2 - incorrectText.getMeasuredWidth() / 2;
+    incorrectText.y = 200;
+}
+
+function removeCorrectText() {
+    stage.removeChild(correctText);
+    //correct text
+    correctText = new createjs.Text("Correct!", "24px Comic Sans MS", "#FFFFFF");
+    correctText.textBaseline = "alphabetic";
+    correctText.x = STAGE_WIDTH / 2 - correctText.getMeasuredWidth() / 2;
+    correctText.y = 200;
 }
