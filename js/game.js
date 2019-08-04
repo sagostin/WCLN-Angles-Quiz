@@ -254,7 +254,6 @@ function loadTextAndBoxes() {
     stage.addChild(angleText);
     stage.addChild(rationalText);
 
-    //TODO fix this, it breaks when on the third question
     for (let i = 0; i < json.questions.length; i++) {
         if (i == angleTextNum) {
             possibleAngles.push(questionNumber);
@@ -321,6 +320,8 @@ function winScreenClick() {
     stage.removeChild(winScreen);
     stage.removeChild(scoreText);
 
+    score = 0;
+
     loadQuestion(0);
     loadTextAndBoxes();
 }
@@ -383,7 +384,7 @@ function resetChecks() {
         loadQuestion(nextQuestion);
         loadTextAndBoxes();
     } else {
-
+        showWinScreen();
     }
 }
 
