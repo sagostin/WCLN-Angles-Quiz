@@ -77,6 +77,8 @@ let json = {
  *
  * Fix text box size to make it work better.
  *
+ * add it to show the answer's image after you click check
+ *
  */
 
 //text
