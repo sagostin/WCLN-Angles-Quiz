@@ -18,20 +18,56 @@ let questionNumber = 0;
 let json = {
     "questions": [
         {
-            "src": "img/questions/example1.png",
-            "angle": "55 degrees",
-            "rational": "Lines are parallel",
+            "src": "img/questions/question1.png",
+            "angle": "60 degrees",
+            "rational": "Corresponding Angles (L-Rule)",
         },
         {
-            "src": "img/questions/example2.png",
-            "angle": "66 degrees",
-            "rational": "Lines are parallel 2",
+            "src": "img/questions/question2.png",
+            "angle": "120 degrees",
+            "rational": "Supplementary Angles",
         },
         {
-            "src": "img/questions/example3.png",
-            "angle": "77 degrees",
-            "rational": "Lines are parallel 3",
+            "src": "img/questions/question3.png",
+            "angle": "120 degrees",
+            "rational": "Co-interior Angles (C-Rule)",
+        },
+        {
+            "src": "img/questions/question4.png",
+            "angle": "60 degrees",
+            "rational": "Alternate Angles (Z-Rule)",
+        },
+        {
+            "src": "img/questions/question5.png",
+            "angle": "60 degrees",
+            "rational": "Opposite Angles",
+        },
+        {
+            "src": "img/questions/question6.png",
+            "angle": "60 degrees",
+            "rational": "Co-interior Angles (C-Rule)",
+        },
+        {
+            "src": "img/questions/question7.png",
+            "angle": "120 degrees",
+            "rational": "Opposite Angles",
+        },
+        {
+            "src": "img/questions/question8.png",
+            "angle": "60 degrees",
+            "rational": "Supplementary Angles",
+        },
+        {
+            "src": "img/questions/question9.png",
+            "angle": "120 degrees",
+            "rational": "Corresponding Angles (L-Rule)",
+        },
+        {
+            "src": "img/questions/question10.png",
+            "angle": "120 degrees",
+            "rational": "Alternate Angles (Z-Rule)",
         }
+
     ]
 };
 
@@ -280,6 +316,8 @@ function loadTextAndBoxes() {
 let angleClickCount = 0;
 function changeAngleText() {
     stage.removeChild(angleText);
+
+    var currentText = angleText.text.toString()
 
     if (angleClickCount >= json.questions.length) {
         angleClickCount = 0;
