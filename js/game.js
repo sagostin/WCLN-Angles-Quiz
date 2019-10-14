@@ -71,6 +71,14 @@ let json = {
     ]
 };
 
+/**
+ * Fix angle text to prevent duplicate answers
+ * also fix rational items for this
+ *
+ * Fix text box size to make it work better.
+ *
+ */
+
 //text
 let angleText;
 let rationalText;
