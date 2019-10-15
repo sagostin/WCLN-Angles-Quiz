@@ -71,6 +71,9 @@ let json = {
     ]
 };
 
+let fake = {angles: ["30 degrees", "90 degrees"]}
+
+
 /**
  * Fix angle text to prevent duplicate answers
  * also fix rational items for this
@@ -301,25 +304,18 @@ function loadTextAndBoxes() {
     stage.addChild(rationalText);
 
     for (let i = 0; i < json.questions.length; i++) {
-        if (i == angleTextNum) {
-            possibleAngles.push(questionNumber);
-        } else {
-            if (i == questionNumber) {
-                possibleAngles.push(angleTextNum);
-            } else {
-                possibleAngles.push(i);
-            }
+        if (!possibleAngles.includes(json.questions[i].angle)) {
+            possibleAngles.push(json.questions[i].angle)
         }
 
-        if (i == rationalTextNum) {
-            possibleRationals
-                .push(questionNumber);
-        } else {
-            if (i == questionNumber) {
-                possibleRationals.push(rationalTextNum);
-            } else {
-                possibleRationals.push(i);
-            }
+        if (!possibleRationals.includes(json.questions[i].rational)) {
+            possibleRationals.push(json.questions[i].rational)
+        }
+    }
+
+    for (let i = 0; i < fake.angles.length; i++) {
+        if (!possibleAngles.includes(fake.angles[i])) {
+            possibleAngles.push(fake.angles[i])
         }
     }
 }
@@ -327,15 +323,13 @@ let angleClickCount = 0;
 function changeAngleText() {
     stage.removeChild(angleText);
 
-    var currentText = angleText.text.toString()
-
-    if (angleClickCount >= json.questions.length) {
+    if (angleClickCount >= possibleAngles.length) {
         angleClickCount = 0;
     }
 
     console.log(json.questions.length + " " + angleClickCount);
 
-    angleText = new createjs.Text(json.questions[possibleAngles[angleClickCount]].angle, "24px Comic Sans MS", "#FFFFFF");
+    angleText = new createjs.Text(possibleAngles[angleClickCount], "24px Comic Sans MS", "#FFFFFF");
         angleText.textBaseline = "alphabetic";
         angleText.x = 65;
         angleText.y = 90;
@@ -350,10 +344,10 @@ let rationalClickCount = 0;
 function changeRationalText() {
     stage.removeChild(rationalText);
 
-    if (rationalClickCount >= json.questions.length) {
+    if (rationalClickCount >= possibleRationals.length) {
         rationalClickCount = 0;
     }
-    rationalText = new createjs.Text(json.questions[possibleRationals[rationalClickCount]].rational, "24px Comic Sans MS", "#FFFFFF");
+    rationalText = new createjs.Text(possibleRationals[rationalClickCount], "24px Comic Sans MS", "#FFFFFF");
     rationalText.textBaseline = "alphabetic";
     rationalText.x = 65;
     rationalText.y = 150;
@@ -457,7 +451,7 @@ function checkButtonClick(event) {
     //event.target.x = event.stageX;
     //event.target.y = event.stageY;
 
-    if (((rationalClickCount - 1) == rationalTextNum) && ((angleClickCount - 1) == angleTextNum)) {
+    if ((angleText.text.toString() == json.questions[questionNumber].angle) && (rationalText.text.toString() == json.questions[questionNumber].rational)) {
         console.log("correct!");
         score++;
 
