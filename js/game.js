@@ -381,7 +381,7 @@ function loadQuestion(number) {
 
     if (!(number >= count)) {
         questionImg[number].x = STAGE_WIDTH / 2 - (questionImg[number].image.width / 2);
-        questionImg[number].y = 335;
+        questionImg[number].y = 300;
         stage.addChild(questionImg[number]);
 
         questionNumber = number;
