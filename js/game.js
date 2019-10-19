@@ -73,17 +73,6 @@ let json = {
 
 let fake = {angles: ["30 degrees", "90 degrees"]}
 
-
-/**
- * Fix angle text to prevent duplicate answers
- * also fix rational items for this
- *
- * Fix text box size to make it work better.
- *
- * add it to show the answer's image after you click check
- *
- */
-
 //text
 let angleText;
 let rationalText;
@@ -347,7 +336,16 @@ function changeRationalText() {
     if (rationalClickCount >= possibleRationals.length) {
         rationalClickCount = 0;
     }
-    rationalText = new createjs.Text(possibleRationals[rationalClickCount], "24px Comic Sans MS", "#FFFFFF");
+
+    let textSize = 24
+
+    let fakeTextForSizing = new createjs.Text(possibleRationals[rationalClickCount], textSize + "px Comic Sans MS", "#FFFFFF");
+    while (fakeTextForSizing.getMeasuredWidth() >= 230) {
+        textSize -= 1;
+        fakeTextForSizing = new createjs.Text(possibleRationals[rationalClickCount], textSize + "px Comic Sans MS", "#FFFFFF");
+    }
+    //textSize -= 1;
+    rationalText = new createjs.Text(possibleRationals[rationalClickCount], textSize + "px Comic Sans MS", "#FFFFFF");
     rationalText.textBaseline = "alphabetic";
     rationalText.x = 65;
     rationalText.y = 150;
