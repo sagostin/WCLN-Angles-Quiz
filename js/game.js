@@ -19,57 +19,75 @@ let json = {
     "questions": [
         {
             "src": "img/questions/question1.png",
+            "answer": "img/questions/question1A.png",
             "angle": "60 degrees",
-            "rational": "Corresponding Angles (L-Rule)",
+            "rational": "Corresponding Angles (F-Rule)",
         },
         {
             "src": "img/questions/question2.png",
+            "answer": "img/questions/question2A.png",
             "angle": "120 degrees",
             "rational": "Supplementary Angles",
         },
         {
             "src": "img/questions/question3.png",
+            "answer": "img/questions/question3A.png",
             "angle": "120 degrees",
             "rational": "Co-interior Angles (C-Rule)",
         },
         {
             "src": "img/questions/question4.png",
+            "answer": "img/questions/question4A.png",
             "angle": "60 degrees",
             "rational": "Alternate Angles (Z-Rule)",
         },
         {
             "src": "img/questions/question5.png",
+            "answer": "img/questions/question5A.png",
             "angle": "60 degrees",
             "rational": "Opposite Angles",
         },
         {
             "src": "img/questions/question6.png",
+            "answer": "img/questions/question6A.png",
             "angle": "60 degrees",
             "rational": "Co-interior Angles (C-Rule)",
         },
         {
             "src": "img/questions/question7.png",
+            "answer": "img/questions/question7A.png",
             "angle": "120 degrees",
             "rational": "Opposite Angles",
         },
         {
             "src": "img/questions/question8.png",
+            "answer": "img/questions/question8A.png",
             "angle": "60 degrees",
             "rational": "Supplementary Angles",
         },
         {
             "src": "img/questions/question9.png",
+            "answer": "img/questions/question9A.png",
             "angle": "120 degrees",
             "rational": "Corresponding Angles (L-Rule)",
         },
         {
             "src": "img/questions/question10.png",
+            "answer": "img/questions/question10A.png",
             "angle": "120 degrees",
             "rational": "Alternate Angles (Z-Rule)",
         }
 
     ]
 };
+
+/**
+ * TODO:
+ * Show correct answer image when clicking the check button
+ * Add score tracker
+ * Show score after finished all questions
+ *
+ */
 
 let fake = {angles: ["30 degrees", "90 degrees"]}
 
@@ -88,6 +106,7 @@ let background;
 let checkButton;
 let winScreen;
 let questionImg = [];
+let answerImg = [];
 let nextButton = [];
 
 var imageContainer = new createjs.Shape();
@@ -142,6 +161,7 @@ function setupManifest() {
     let count = 0;
     for (i in json.questions) {
         manifest.push({src: json.questions[i].src, id: "question" + count});
+        manifest.push({src: json.questions[i].src, id: "answer" + count});
         count++;
         console.log(json.questions[i].src);
     }
