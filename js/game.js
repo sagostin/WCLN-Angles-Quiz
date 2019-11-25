@@ -161,7 +161,7 @@ function setupManifest() {
     let count = 0;
     for (i in json.questions) {
         manifest.push({src: json.questions[i].src, id: "question" + count});
-        manifest.push({src: json.questions[i].src, id: "answer" + count});
+        manifest.push({src: json.questions[i].answer, id: "answer" + count});
         count++;
         console.log(json.questions[i].src);
     }
