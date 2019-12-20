@@ -81,7 +81,7 @@ let json = {
     ]
 };
 
-let fake = {angles: ["30 degrees", "90 degrees"]}
+let fake = {angles: ["30 degrees", "90 degrees"]};
 
 //text
 let angleText;
@@ -155,6 +155,10 @@ function setupManifest() {
         {
             src: "img/correct-screen.png",
             id: "correct"
+        },
+        {
+            src: "img/howto.png",
+            id: "howto"
         }
     ];
 
@@ -186,6 +190,7 @@ function handleFileProgress(event) {
 
 let incorrectScreen;
 let correctScreen;
+let howToPlay;
 
 function handleFileLoad(event) {
     console.log("A file has loaded of type: " + event.item.type);
@@ -216,6 +221,9 @@ function handleFileLoad(event) {
     if (event.item.id.startsWith("correct")) {
         correctScreen = new createjs.Bitmap(event.result);
     }
+    if (event.item.id.startsWith("howto")) {
+        howToPlay = new createjs.Bitmap(event.result);
+    }
 }
 
 function loadError(evt) {
@@ -241,6 +249,14 @@ function loadComplete(event) {
  *
  */
 function initGraphics() {
+    stage.addChild(howToPlay);
+    howToPlay.on("click", function (event) {
+        startGame(event);
+    });
+}
+
+function startGame(event) {
+    stage.removeChild(event.target);
     imageContainer.graphics.beginStroke("#5771b7");
     imageContainer.graphics.beginFill("#ffffff");
     imageContainer.graphics.drawRect(40, 300, STAGE_WIDTH - 80, 240);
@@ -362,6 +378,7 @@ function loadTextAndBoxes() {
  * @type {number}
  */
 let angleClickCount = 0;
+
 function changeAngleText() {
     stage.removeChild(angleText);
 
@@ -372,8 +389,8 @@ function changeAngleText() {
     console.log(json.questions.length + " " + angleClickCount);
 
     angleText = new createjs.Text(possibleAngles[angleClickCount], "24px Comic Sans MS", "#FFFFFF");
-        angleText.textBaseline = "alphabetic";
-        angleText.x = 65;
+    angleText.textBaseline = "alphabetic";
+    angleText.x = 65;
     angleText.y = 90 + 40;
 
     angleClickCount++;
@@ -387,6 +404,7 @@ function changeAngleText() {
  * @type {number}
  */
 let rationalClickCount = 0;
+
 function changeRationalText() {
     stage.removeChild(rationalText);
 
@@ -394,7 +412,7 @@ function changeRationalText() {
         rationalClickCount = 0;
     }
 
-    let textSize = 24
+    let textSize = 24;
 
     let fakeTextForSizing = new createjs.Text(possibleRationals[rationalClickCount], textSize + "px Comic Sans MS", "#FFFFFF");
     while (fakeTextForSizing.getMeasuredWidth() >= 230) {
@@ -540,7 +558,7 @@ function checkButtonClick(event) {
 }
 
 function nextQuestionClick(event) {
-    stage.removeChild(event.target)
+    stage.removeChild(event.target);
     event.target.alpha = 1.0;
 
     resetChecks();
