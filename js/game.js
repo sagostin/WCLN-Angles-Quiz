@@ -87,8 +87,6 @@ let fake = {angles: ["30 degrees", "90 degrees"]};
 let angleText;
 let rationalText;
 let scoreText;
-let correctText;
-let incorrectText;
 
 let answerBox = new createjs.Shape();
 let rationalBox = new createjs.Shape();
@@ -297,18 +295,6 @@ function loadTextAndBoxes() {
     rationalText.textBaseline = "alphabetic";
     rationalText.x = 65;
     rationalText.y = 150 + 70;
-
-    //correct text
-    correctText = new createjs.Text("Correct!", "24px Comic Sans MS", "#FFFFFF");
-    correctText.textBaseline = "alphabetic";
-    correctText.x = STAGE_WIDTH / 2 - correctText.getMeasuredWidth() / 2;
-    correctText.y = 200;
-
-    //incorrect text;
-    incorrectText = new createjs.Text("Incorrect!", "24px Comic Sans MS", "#FFFFFF");
-    incorrectText.textBaseline = "alphabetic";
-    incorrectText.x = STAGE_WIDTH / 2 - incorrectText.getMeasuredWidth() / 2;
-    incorrectText.y = 200;
 
     if (!gameStarted) {
         nextButton[0].on("click", function (event) {
