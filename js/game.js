@@ -99,6 +99,8 @@ let questionImg = [];
 let answerImg = [];
 let nextButton = [];
 
+let textAboveBox = [];
+
 var imageContainer = new createjs.Shape();
 
 /*
@@ -266,6 +268,21 @@ function startGame(event) {
         checkButtonClick(event);
     });
     stage.addChild(checkButton);
+
+    //angle text
+    textAboveBox[0] = new createjs.Text("Value of X is:", "24px Comic Sans MS", "#FFFFFF");
+    textAboveBox[0].textBaseline = "alphabetic";
+    textAboveBox[0].x = 65;
+    textAboveBox[0].y = 90;
+
+    //rational text
+    textAboveBox[1] = new createjs.Text("Justification of Angle:", "24px Comic Sans MS", "#FFFFFF");
+    textAboveBox[1].textBaseline = "alphabetic";
+    textAboveBox[1].x = 65;
+    textAboveBox[1].y = 150 + 30;
+
+    stage.addChild(textAboveBox[0]);
+    stage.addChild(textAboveBox[1]);
 
     loadQuestion(0);
     loadTextAndBoxes();
