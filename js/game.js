@@ -155,6 +155,14 @@ function setupManifest() {
         {
             src: "img/win-screen.png",
             id: "winscreen"
+        },
+        {
+            src: "img/incorrect-screen.png",
+            id: "incorrect"
+        },
+        {
+            src: "img/correct-screen.png",
+            id: "correct"
         }
     ];
 
@@ -258,29 +266,33 @@ let rationalTextNum = getRandomInt(json.questions.length);
 function loadTextAndBoxes() {
     //angle box
     answerBox.graphics.beginStroke("black");
-    answerBox.graphics.drawRect(60, 60, STAGE_WIDTH - 120, 45);
+    answerBox.graphics.beginFill("#465F99");
+    answerBox.alpha = 0.5;
+    answerBox.graphics.drawRect(60, 60 + 40, STAGE_WIDTH - 120, 45);
     stage.addChild(answerBox);
     nextButton[0].x = STAGE_WIDTH / 2 + 100;
-    nextButton[0].y = 68;
+    nextButton[0].y = 68 + 40;
 
     //rational box
     rationalBox.graphics.beginStroke("black");
-    rationalBox.graphics.drawRect(60, 120, STAGE_WIDTH - 120, 45);
+    rationalBox.graphics.beginFill("#465F99");
+    rationalBox.alpha = 0.5;
+    rationalBox.graphics.drawRect(60, 120 + 70, STAGE_WIDTH - 120, 45);
     stage.addChild(rationalBox);
     nextButton[1].x = STAGE_WIDTH / 2 + 100;
-    nextButton[1].y = 128;
+    nextButton[1].y = 128 + 70;
 
     //angle text
     angleText = new createjs.Text("Select Angle X", "24px Comic Sans MS", "#FFFFFF");
     angleText.textBaseline = "alphabetic";
     angleText.x = 65;
-    angleText.y = 90;
+    angleText.y = 90 + 40;
 
     //rational text
     rationalText = new createjs.Text("Select Rational", "24px Comic Sans MS", "#FFFFFF");
     rationalText.textBaseline = "alphabetic";
     rationalText.x = 65;
-    rationalText.y = 150;
+    rationalText.y = 150 + 70;
 
     //correct text
     correctText = new createjs.Text("Correct!", "24px Comic Sans MS", "#FFFFFF");
@@ -341,7 +353,7 @@ function changeAngleText() {
     angleText = new createjs.Text(possibleAngles[angleClickCount], "24px Comic Sans MS", "#FFFFFF");
         angleText.textBaseline = "alphabetic";
         angleText.x = 65;
-        angleText.y = 90;
+    angleText.y = 90 + 40;
 
     angleClickCount++;
 
@@ -368,7 +380,7 @@ function changeRationalText() {
     rationalText = new createjs.Text(possibleRationals[rationalClickCount], textSize + "px Comic Sans MS", "#FFFFFF");
     rationalText.textBaseline = "alphabetic";
     rationalText.x = 65;
-    rationalText.y = 150;
+    rationalText.y = 150 + 70;
 
     rationalClickCount++;
 

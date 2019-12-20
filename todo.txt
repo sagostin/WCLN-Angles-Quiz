@@ -1,0 +1,9 @@
+1. Barb points out that it's commonly shown as F-Rule (vs. L-Rule), so could you please change that.
+2. When you hit "Check" the answer image should show up in the graphic area (I've attached images with F-Rule updates).
+3. Center the angles (in the pulldown).
+4. Keep track of which are correct or not (score included).
+5. Have bigger splash for "Correct" and "Incorrect" along with noise (mute button included).
+6. Click "Next" to go to the next question.
+7. Add a little bit of instructions, per the graphic below.
+I just did a quick PS, so the white boxes aren't intended, just the
+pulldown boxes spread out so they have the instructions above.
