@@ -3,7 +3,6 @@
 3. Center the angles (in the pulldown).
 4. Keep track of which are correct or not (score included).
 5. Have bigger splash for "Correct" and "Incorrect" along with noise (mute button included).
-6. Click "Next" to go to the next question.
 7. Add a little bit of instructions, per the graphic below.
 I just did a quick PS, so the white boxes aren't intended, just the
 pulldown boxes spread out so they have the instructions above.

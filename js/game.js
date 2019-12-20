@@ -81,14 +81,6 @@ let json = {
     ]
 };
 
-/**
- * TODO:
- * Show correct answer image when clicking the check button
- * Add score tracker
- * Show score after finished all questions
- *
- */
-
 let fake = {angles: ["30 degrees", "90 degrees"]}
 
 //text
@@ -192,6 +184,9 @@ function handleFileProgress(event) {
     stage.update();*/
 }
 
+let incorrectScreen;
+let correctScreen;
+
 function handleFileLoad(event) {
     console.log("A file has loaded of type: " + event.item.type);
     // create bitmaps of images
@@ -210,6 +205,16 @@ function handleFileLoad(event) {
     }
     if (event.item.id.startsWith("question")) {
         questionImg.push(new createjs.Bitmap(event.result));
+    }
+    if (event.item.id.startsWith("answer")) {
+        answerImg.push(new createjs.Bitmap(event.result));
+    }
+
+    if (event.item.id.startsWith("incorrect")) {
+        incorrectScreen = new createjs.Bitmap(event.result);
+    }
+    if (event.item.id.startsWith("correct")) {
+        correctScreen = new createjs.Bitmap(event.result);
     }
 }
 
@@ -264,23 +269,6 @@ let angleTextNum = getRandomInt(json.questions.length);
 let rationalTextNum = getRandomInt(json.questions.length);
 
 function loadTextAndBoxes() {
-    //angle box
-    answerBox.graphics.beginStroke("black");
-    answerBox.graphics.beginFill("#465F99");
-    answerBox.alpha = 0.5;
-    answerBox.graphics.drawRect(60, 60 + 40, STAGE_WIDTH - 120, 45);
-    stage.addChild(answerBox);
-    nextButton[0].x = STAGE_WIDTH / 2 + 100;
-    nextButton[0].y = 68 + 40;
-
-    //rational box
-    rationalBox.graphics.beginStroke("black");
-    rationalBox.graphics.beginFill("#465F99");
-    rationalBox.alpha = 0.5;
-    rationalBox.graphics.drawRect(60, 120 + 70, STAGE_WIDTH - 120, 45);
-    stage.addChild(rationalBox);
-    nextButton[1].x = STAGE_WIDTH / 2 + 100;
-    nextButton[1].y = 128 + 70;
 
     //angle text
     angleText = new createjs.Text("Select Angle X", "24px Comic Sans MS", "#FFFFFF");
@@ -317,7 +305,34 @@ function loadTextAndBoxes() {
         winScreen.on("click", function (event) {
             winScreenClick(event);
         });
+
+        correctScreen.on("click", function (event) {
+            nextQuestionClick(event);
+        });
+
+        incorrectScreen.on("click", function (event) {
+            nextQuestionClick(event);
+        });
+
+        answerBox.alpha = 0.5;
+        rationalBox.alpha = 0.5;
+
+        answerBox.graphics.beginStroke("black");
+        answerBox.graphics.beginFill("#465F99");
+        answerBox.graphics.drawRect(60, 60 + 40, STAGE_WIDTH - 120, 45);
+        nextButton[0].x = STAGE_WIDTH / 2 + 100;
+        nextButton[0].y = 68 + 40;
+
+        //rational box
+        rationalBox.graphics.beginStroke("black");
+        rationalBox.graphics.beginFill("#465F99");
+        rationalBox.graphics.drawRect(60, 120 + 70, STAGE_WIDTH - 120, 45);
+        nextButton[1].x = STAGE_WIDTH / 2 + 100;
+        nextButton[1].y = 128 + 70;
     }
+
+    stage.addChild(answerBox);
+    stage.addChild(rationalBox);
 
     stage.addChild(nextButton[0]);
     stage.addChild(nextButton[1]);
@@ -340,6 +355,12 @@ function loadTextAndBoxes() {
         }
     }
 }
+
+/**
+ * Change the text for the angle option based on the current selected option.
+ *
+ * @type {number}
+ */
 let angleClickCount = 0;
 function changeAngleText() {
     stage.removeChild(angleText);
@@ -360,7 +381,11 @@ function changeAngleText() {
     stage.addChild(angleText);
 }
 
-//reset the random number for the correct answer
+/**
+ * Change the rational option based on the current selected one.
+ *
+ * @type {number}
+ */
 let rationalClickCount = 0;
 function changeRationalText() {
     stage.removeChild(rationalText);
@@ -422,6 +447,18 @@ function loadQuestion(number) {
     }
 }
 
+function loadAnswerImage(number) {
+    let count = json.questions.length;
+
+    if (!(number >= count)) {
+        answerImg[number].x = STAGE_WIDTH / 2 - (answerImg[number].image.width / 2);
+        answerImg[number].y = 300;
+        stage.addChild(answerImg[number]);
+    } else {
+        console.error("number out of bounds");
+    }
+}
+
 /**
  * Update the stage. (Tween Ticker)
  *
@@ -464,7 +501,7 @@ function showWinScreen() {
     stage.addChild(winScreen);
 
     scoreText
-        = new createjs.Text(score, "24px Comic Sans MS", "#5771b7");
+        = new createjs.Text(score + "/" + json.questions.length, "24px Comic Sans MS", "#5771b7");
     scoreText.textBaseline = "alphabetic";
     scoreText.x = STAGE_WIDTH / 2 + 60;
     scoreText.y = 248;
@@ -485,30 +522,26 @@ function checkButtonClick(event) {
         console.log("correct!");
         score++;
 
-        stage.addChild(correctText);
-        createjs.Tween.get(correctText).to({alpha: 0}, 2000).call(removeCorrectText);
+        //TODO display correct screen & show correct answer
 
-        resetChecks();
+        correctScreen.alpha = 0;
+        stage.addChild(correctScreen);
+        createjs.Tween.get(correctScreen).to({alpha: 1}, 1000);
+
+        loadAnswerImage(questionNumber);
     } else {
-        stage.addChild(incorrectText);
-        createjs.Tween.get(incorrectText).to({alpha: 0}, 2000).call(removeIncorrectText);
+        //TODO display incorrect screen & show correct answer
+
+        incorrectScreen.alpha = 0;
+        stage.addChild(incorrectScreen);
+        createjs.Tween.get(incorrectScreen).to({alpha: 1}, 1000);
+        loadAnswerImage(questionNumber);
     }
 }
 
-function removeIncorrectText() {
-    stage.removeChild(incorrectText);
-    //incorrect text;
-    incorrectText = new createjs.Text("Incorrect!", "24px Comic Sans MS", "#FFFFFF");
-    incorrectText.textBaseline = "alphabetic";
-    incorrectText.x = STAGE_WIDTH / 2 - incorrectText.getMeasuredWidth() / 2;
-    incorrectText.y = 200;
-}
+function nextQuestionClick(event) {
+    stage.removeChild(event.target)
+    event.target.alpha = 1.0;
 
-function removeCorrectText() {
-    stage.removeChild(correctText);
-    //correct text
-    correctText = new createjs.Text("Correct!", "24px Comic Sans MS", "#FFFFFF");
-    correctText.textBaseline = "alphabetic";
-    correctText.x = STAGE_WIDTH / 2 - correctText.getMeasuredWidth() / 2;
-    correctText.y = 200;
+    resetChecks();
 }
