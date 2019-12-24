@@ -207,11 +207,11 @@ function setupManifest() {
         },
         {
             src: "sounds/incorrect-sound.mp3",
-            id: "incorrect-sound"
+            id: "sound-incorrect"
         },
         {
             src: "sounds/correct-sound.mp3",
-            id: "correct-sound"
+            id: "sound-correct"
         },
         {
             src: "img/unmute.png",
@@ -275,7 +275,6 @@ function handleFileLoad(event) {
     if (event.item.id.startsWith("answer")) {
         answerImg.push(new createjs.Bitmap(event.result));
     }
-
     if (event.item.id.startsWith("incorrect")) {
         incorrectScreen = new createjs.Bitmap(event.result);
     }
@@ -309,8 +308,6 @@ function loadComplete(event) {
     stage.addChild(background);
 
     initGraphics();
-
-    initMuteUnMute();
 }
 
 /**
@@ -321,6 +318,7 @@ function initGraphics() {
     stage.addChild(howToPlay);
     howToPlay.on("click", function (event) {
         startGame(event);
+        initMuteUnMute();
     });
 }
 
@@ -613,22 +611,20 @@ function checkButtonClick(event) {
         score++;
 
         //TODO display correct screen & show correct answer
-        //playSound("correct-sound");
 
-        //correctScreen.alpha = 0;
+        playSound("sound-correct");
+        correctScreen.alpha = 0;
         stage.addChild(correctScreen);
-        //createjs.Tween.get(correctScreen).to({alpha: 1}, 1000);
+        createjs.Tween.get(correctScreen).to({alpha: 1}, 1000);
 
         loadAnswerImage(questionNumber);
     } else {
         //TODO display incorrect screen & show correct answer
 
-        //playSound("incorrect-sound");
-
-        //incorrectScreen.alpha = 0;
+        incorrectScreen.alpha = 0;
+        playSound("sound-incorrect");
         stage.addChild(incorrectScreen);
-        //createjs.Tween.get(incorrectScreen).to({alpha: 1}, 1000);
-
+        createjs.Tween.get(incorrectScreen).to({alpha: 1}, 1000);
         loadAnswerImage(questionNumber);
     }
 }
