@@ -14,6 +14,9 @@ let score = 0;
 
 let questionNumber = 0;
 
+let muted;
+let mute, unmute;
+
 //question storage and such
 let json = {
     "questions": [
@@ -121,6 +124,48 @@ function init() {
     gameStarted = false;
 
     stage.update();
+
+    muted = false;
+}
+
+function initMuteUnMute() {
+    var hitArea = new createjs.Shape();
+    hitArea.graphics.beginFill("#000").drawRect(0, 0, mute.image.width, mute.image.height);
+    mute.hitArea = unmute.hitArea = hitArea;
+
+    mute.x = unmute.x = STAGE_WIDTH / 16;
+    mute.y = unmute.y = 550;
+
+    mute.cursor = "pointer";
+    unmute.cursor = "pointer";
+
+    mute.on("click", toggleMute);
+    unmute.on("click", toggleMute);
+
+    stage.addChild(mute);
+}
+
+function playSound(id) {
+    if (muted == false) {
+        createjs.Sound.play(id);
+    }
+}
+
+function toggleMute() {
+
+    if (muted == true) {
+        muted = false;
+    } else {
+        muted = true;
+    }
+
+    if (muted == true) {
+        stage.addChild(unmute);
+        stage.removeChild(mute);
+    } else {
+        stage.addChild(mute);
+        stage.removeChild(unmute);
+    }
 }
 
 /*
@@ -159,7 +204,23 @@ function setupManifest() {
         {
             src: "img/howto.png",
             id: "howto"
-        }
+        },
+        {
+            src: "sounds/incorrect-sound.mp3",
+            id: "incorrect-sound"
+        },
+        {
+            src: "sounds/correct-sound.mp3",
+            id: "correct-sound"
+        },
+        {
+            src: "img/unmute.png",
+            id: "mute"
+        },
+        {
+            src: "img/mute.png",
+            id: "unmute"
+        },
     ];
 
     let count = 0;
@@ -224,6 +285,12 @@ function handleFileLoad(event) {
     if (event.item.id.startsWith("howto")) {
         howToPlay = new createjs.Bitmap(event.result);
     }
+    if (event.item.id.startsWith("mute")) {
+        mute = new createjs.Bitmap(event.result);
+    }
+    if (event.item.id.startsWith("unmute")) {
+        unmute = new createjs.Bitmap(event.result);
+    }
 }
 
 function loadError(evt) {
@@ -242,6 +309,8 @@ function loadComplete(event) {
     stage.addChild(background);
 
     initGraphics();
+
+    initMuteUnMute();
 }
 
 /**
@@ -544,18 +613,22 @@ function checkButtonClick(event) {
         score++;
 
         //TODO display correct screen & show correct answer
+        //playSound("correct-sound");
 
-        correctScreen.alpha = 0;
+        //correctScreen.alpha = 0;
         stage.addChild(correctScreen);
-        createjs.Tween.get(correctScreen).to({alpha: 1}, 1000);
+        //createjs.Tween.get(correctScreen).to({alpha: 1}, 1000);
 
         loadAnswerImage(questionNumber);
     } else {
         //TODO display incorrect screen & show correct answer
 
-        incorrectScreen.alpha = 0;
+        //playSound("incorrect-sound");
+
+        //incorrectScreen.alpha = 0;
         stage.addChild(incorrectScreen);
-        createjs.Tween.get(incorrectScreen).to({alpha: 1}, 1000);
+        //createjs.Tween.get(incorrectScreen).to({alpha: 1}, 1000);
+
         loadAnswerImage(questionNumber);
     }
 }
