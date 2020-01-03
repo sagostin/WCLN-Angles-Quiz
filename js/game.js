@@ -72,7 +72,7 @@ let json = {
             "src": "img/questions/question9.png",
             "answer": "img/questions/question9A.png",
             "angle": "120 degrees",
-            "rational": "Corresponding Angles (L-Rule)",
+            "rational": "Corresponding Angles (F-Rule)",
         },
         {
             "src": "img/questions/question10.png",
@@ -85,6 +85,8 @@ let json = {
 };
 
 let fake = {angles: ["30 degrees", "90 degrees"]};
+
+let angles = [];
 
 //text
 let angleText;
@@ -439,6 +441,22 @@ function loadTextAndBoxes() {
         if (!possibleAngles.includes(fake.angles[i])) {
             possibleAngles.push(fake.angles[i])
         }
+    }
+
+
+    /**
+     * Sort angles from lowest to highest
+     **/
+    let newAngles = [];
+
+    for (let i = 0; i < possibleAngles.length; i++) {
+        newAngles.push(parseInt(possibleAngles[i].split(" ")[0]));
+    }
+    newAngles.sort((a, b) => a - b);
+    possibleAngles = [];
+
+    for (let i = 0; i < newAngles.length; i++) {
+        possibleAngles.push(newAngles[i] + " degrees");
     }
 }
 
